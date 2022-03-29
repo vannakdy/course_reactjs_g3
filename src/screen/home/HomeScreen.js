@@ -28,9 +28,7 @@ const HomeScreen = () => {
         )
     }
 
- 
-
-
+    
     return (
         <div>
             {/* calling component */}
@@ -41,17 +39,15 @@ const HomeScreen = () => {
             <AnimalCart
                 name = "Cat"
                 description="Description cat"
+                view={1000}
             />
 
             <AnimalCart
                 name = "Pig"
                 description="Description cat"
+                view={3000}
+                data={["red","blue","yellow"]}
             />
-
-            {/* <img 
-                src=""
-                width={}
-            /> */}
         </div>
     )
 }
