@@ -1,11 +1,13 @@
 import React, {useState} from  'react';
 import AnimalCart from '../../component/animal/AnimalCart';
+
 const HomeScreen = () => {
     const [code,setCode] = useState("");
     const [name,setName] = useState("");
     const [price,setPrice] = useState(0);
     const [qty,setQty] = useState(0);
     const [arrProduct,setArrProduct] = useState([]);
+
     const handleAdd = () => {
         var dataTmp = {
             "code" : code,
@@ -78,4 +80,5 @@ const HomeScreen = () => {
         </div>
     )
 }
+
 export  default HomeScreen;

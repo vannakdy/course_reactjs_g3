@@ -10,7 +10,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="menu_main">
-         {/* <Link className="menu_item" to="/">Home</Link> */}
+         <Link className="menu_item" to="/">Home</Link>
          <Link className="menu_item" to="/student">Student</Link>
          <Link className="menu_item" to="/teacher">Teacher</Link>
          <Link className="menu_item" to="/course">Course</Link>
