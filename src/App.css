@@ -1,15 +1,16 @@
 .menu_main{
-  background-color: gray;
-  padding: 20px;
+  background-color: #055e87;
+  /* padding: 20px; */
 }
 .menu_item{
+  display: inline-block;
   padding: 10px 20px;
   font-size: 20px;
   color:#FFFFFF;
   text-decoration: none;
 }
 .menu_item:hover{
-  background-color: #61dafb;
+  background-color: #60b5c9;
 }
 
 .App {
