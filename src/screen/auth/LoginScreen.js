@@ -1,19 +1,41 @@
 import React , {useState} from "react";
 import "./LoginScreen.css";
 import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
 const LoginScreen = () => {
     const navigate = useNavigate();
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");
 
     const handleLogin = () => {
-        var username_tmp = "sa";
-        var password_tmp = "123";
-        if(username === username_tmp && password === password_tmp){
-            navigate("/");
-        }else{
-            console.log("Username or password incorrect!");
-        }
+
+        axios({
+            method: "POST",
+            url: "https://nitc.cleverapps.io/api/auth/login",
+            data:{
+                "username" : username,
+                "password" : password
+            }
+        }).then(response=>{
+            var res = response.data;
+            localStorage.setItem("accessToken" , res.accessToken);
+            localStorage.setItem("permiision" , res.permiision);
+            localStorage.setItem("refreshToken" , res.refreshToken);
+            localStorage.setItem("username" , res.username);
+            localStorage.setItem("is_login","true");
+            window.location.href = "/course"
+        })
+
+
+
+        // localStorage.setItem("data","dara sok");
+        // var data = localStorage.getItem("data"); // get data by key
+        // localStorage.removeItem("x") remove by key
+        // localStorage.clear();
+        // console.log(data);
+       
+        
+
         // var param = {
         //     "username" : "sa",
         //     "passsword" : "1234",

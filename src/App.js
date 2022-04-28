@@ -8,15 +8,26 @@ import LoginScreen from "./screen/auth/LoginScreen";
 import {BrowserRouter,Routes,Route,Link} from "react-router-dom";
 
 const App = () => {
+  const is_login = localStorage.getItem("is_login");
+  const handleLoginOut = () => {
+    localStorage.setItem("is_login","false");
+    window.location.href = "/login"
+  }
   return (
     <BrowserRouter>
-      <div className="menu_main">
+      {is_login == "true" ?
+       <div className="menu_main">
          <Link className="menu_item" to="/">Home</Link>
+         <Link className="menu_item" to="/course">Course</Link>
          <Link className="menu_item" to="/student">Student</Link>
          <Link className="menu_item" to="/teacher">Teacher</Link>
-         <Link className="menu_item" to="/course">Course</Link>
-         <Link className="menu_item" to="/login">Login</Link>
+         <Link className="menu_item" to="/login" onClick={handleLoginOut}>logout</Link>
       </div>
+      :
+      <div className="menu_main">
+         <Link className="menu_item" to="/login">Brand Name</Link>
+      </div>
+    }
      <Routes>
         <Route path="/" element={<HomeScreen />}/>
         <Route path="/student" element={ <StudentScreen/>}/>
