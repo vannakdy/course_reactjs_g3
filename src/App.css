@@ -1,6 +1,7 @@
 .menu_main{
   background-color: #055e87;
-  /* padding: 20px; */
+  display: flex;
+  justify-content: space-between;
 }
 .menu_item{
   display: inline-block;
@@ -10,7 +11,7 @@
   text-decoration: none;
 }
 .menu_item:hover{
-  background-color: #60b5c9;
+  background-color: #0c1517;
 }
 
 .App {

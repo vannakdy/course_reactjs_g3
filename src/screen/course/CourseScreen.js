@@ -2,6 +2,11 @@
 
 import React, { useEffect,useState } from "react";
 import axios from "axios";
+import {Button,Modal} from "antd";
+import {
+    DownOutlined
+} from "@ant-design/icons";
+
 const CourseScreen = () => {
     const [list , setList] = useState([]);
     const token = localStorage.getItem("accessToken")
@@ -49,6 +54,28 @@ const CourseScreen = () => {
     return (
         <div>
             <h1>CourseScreen</h1>
+            <Button 
+                type="primary"
+                size="small"
+                // disabled={true}
+                block={true}
+                style={{color:"red"}}
+            >
+                Default Button
+            </Button>
+            <br/>
+            <Button 
+                type="primary"
+                size="small"
+                shape="round"
+            >
+                Button
+            </Button>
+            <div>
+                <DownOutlined 
+                    style={{color:"green",fontSize:44}}
+                />
+            </div>
             <h1>{list.length}</h1>
             {
                 list.map((item,index)=>{
