@@ -2,14 +2,18 @@
 
 import React, { useEffect,useState } from "react";
 import axios from "axios";
-import {Button,Modal} from "antd";
+import {Button,message,Table,Space} from "antd";
 import {
-    DownOutlined
+    PlusOutlined,
+    DeleteFilled,
+    EditFilled
 } from "@ant-design/icons";
+import "./CourseScreen.css";
 
 const CourseScreen = () => {
     const [list , setList] = useState([]);
     const token = localStorage.getItem("accessToken")
+
     useEffect(()=>{
         getListCourse();
     },[])
@@ -30,31 +34,96 @@ const CourseScreen = () => {
         })
     }
 
-    const onClickDelete = (id) => {
+    const handleDelete = (record) => {
         axios({
             method : "DELETE",
-            url : "https://nitc.cleverapps.io/api/courses/"+id,
+            url : "https://nitc.cleverapps.io/api/courses/"+record.course_id,
             data : {},
             headers : {
                 Authorization : `Bearer ${token}`
             }
         }).then(response=>{
-            var res = response.data;
+            message.success("Delete successfully!");
             getListCourse();
-            console.log(res);
         })
     }
 
-    // course_id: 62
-    // description: "DEs"
-    // name: "TEst"
-    // price: 1000
-    // status: 1
+    const handeEdit = () => {
+
+    }
+
+    const columns = [
+        {
+            title : "ID",
+            dataIndex : "course_id"
+        },
+        {
+            title : "Name",
+            dataIndex : "name"
+        },
+        {
+            title : "Price",
+            dataIndex : "price"
+        },
+        {
+            title : "Description",
+            dataIndex : "description"
+        },
+        {
+            title : "Status",
+            dataIndex : "status",
+            render : (status,record) => {
+                return (
+                  <div
+                    style={{
+                        color: status === 1 ? "green" : "brown",
+                        fontWeight:"bold"
+                    }}
+                  >
+                    {status === 1 ? "Eanbled" : "Diabled"} 
+                    {/* <input /> */}
+                  </div>
+                )
+            }
+        },
+        {
+            title : "Action",
+            dataIndex : "",
+            render : (_,record) => {
+                return (
+                    <div style={{textAlign:"right"}}>
+                        {/* <DeleteFilled 
+
+                            style={{
+                                color:"red",
+                                fontSize:24
+                            }}
+                        />
+                        <EditFilled 
+                            style={{
+                                color:"blue",
+                                fontSize:24
+                            }}
+                        /> */}
+                        <Space>
+                            <Button onClick={()=>handleDelete(record)} size="small" danger><DeleteFilled /> Delete</Button>
+                            <Button onClick={handeEdit} size="small" type="primary"><EditFilled /> Edit</Button>
+                        </Space>
+                    </div>
+                )
+            }
+            
+        },
+    ]
+
 
     return (
         <div>
-            <h1>CourseScreen</h1>
-            <Button 
+            <div className="header_container">
+                <h1>List Courses</h1>
+                <Button type="primary"> <PlusOutlined/> New Course</Button>
+            </div>
+            {/* <Button 
                 type="primary"
                 size="small"
                 // disabled={true}
@@ -76,19 +145,25 @@ const CourseScreen = () => {
                     style={{color:"green",fontSize:44}}
                 />
             </div>
-            <h1>{list.length}</h1>
+             */}
             {
-                list.map((item,index)=>{
-                    return(
-                        <div key={index} style={{padding:10}}>
-                            <div>{item.name}</div>
-                            <div>{item.description}</div>
-                            <div>{item.price}$</div>
-                            <div>{item.status == 1 ? "Enabled" : "Disabled"}</div>
-                            <button onClick={()=>onClickDelete(item.course_id)}>Delete</button>
-                        </div>
-                    )
-                })
+                <Table 
+                    bordered={true}
+                    columns={columns}
+                    dataSource={list}
+                />
+
+                // list.map((item,index)=>{
+                //     return(
+                //         <div key={index} style={{padding:10}}>
+                //             <div>{item.name}</div>
+                //             <div>{item.description}</div>
+                //             <div>{item.price}$</div>
+                //             <div>{item.status == 1 ? "Enabled" : "Disabled"}</div>
+                //             <button onClick={()=>onClickDelete(item.course_id)}>Delete</button>
+                //         </div>
+                //     )
+                // })
             }
         </div>
     )
