@@ -8,6 +8,7 @@ import LoginScreen from "./screen/auth/LoginScreen";
 import {BrowserRouter,Routes,Route,Link} from "react-router-dom";
 import {Dropdown,Space,Menu, Button} from "antd";
 import {DownOutlined,UserOutlined,LoginOutlined,SettingFilled} from "@ant-design/icons"
+import CourseFormScreen from "./screen/course/CourseFormScreen"
 
 const App = () => {
   const is_login = localStorage.getItem("is_login");
@@ -51,7 +52,6 @@ const App = () => {
       {is_login == "true" ?
        <div className="menu_main">
          <div>
-          {/* <Link className="menu_item" to="/">Home</Link> */}
           <Link className="menu_item" to="/course">Course</Link>
           <Link className="menu_item" to="/student">Student</Link>
           <Link className="menu_item" to="/teacher">Teacher</Link>
@@ -70,15 +70,18 @@ const App = () => {
       </div>
     }
     <div style={{padding:20}}>
-      <Routes >
+      <Routes>
           <Route path="/" element={<HomeScreen />}/>
           <Route path="/student" element={ <StudentScreen/>}/>
           <Route path="/teacher" element={<TeacherScreen/>}/>
           <Route path="/course" element={<CourseScreen/>}/>
+          <Route path="/course/create" element={<CourseFormScreen/>}/>
+          
           <Route path="/login" element={<LoginScreen/>}/>
           <Route path="*" element={<h1>Route Not Found</h1>}/>
       </Routes>
     </div>
+
     </BrowserRouter>
   )
 }
