@@ -2,17 +2,20 @@
 
 import React, { useEffect,useState } from "react";
 import axios from "axios";
-import {Button,message,Table,Space} from "antd";
+import {Button,message,Table,Space,Spin} from "antd";
 import {
     PlusOutlined,
     DeleteFilled,
     EditFilled
 } from "@ant-design/icons";
 import "./CourseScreen.css";
+import {useNavigate} from "react-router-dom";
 
 const CourseScreen = () => {
 
     const [list , setList] = useState([]);
+    const [loading,setLoading] = useState(false)
+    const navigate = useNavigate();
     
     const token = localStorage.getItem("accessToken")
 
@@ -21,6 +24,7 @@ const CourseScreen = () => {
     },[])
 
     const getListCourse = () => {
+        setLoading(true)
         axios({
             method : "GET",
             url : "https://nitc.cleverapps.io/api/courses",
@@ -30,6 +34,7 @@ const CourseScreen = () => {
                 Authorization : "Bearer "+token
             }
         }).then(response=>{
+            setLoading(false)
             var res = response.data;
             console.log(res.data)
             setList(res.data)
@@ -51,7 +56,7 @@ const CourseScreen = () => {
     }
 
     const handeEdit = () => {
-
+        
     }
 
     const columns = [
@@ -104,12 +109,17 @@ const CourseScreen = () => {
         },
     ]
 
+    const handleToForm = () => {
+        navigate("/course/create");
+    }
+
 
     return (
         <div>
+            <Spin spinning={loading}>
             <div className="header_container">
                 <h1>List Courses</h1>
-                <Button type="primary"> <PlusOutlined/> New Course</Button>
+                <Button type="primary" onClick={handleToForm}> <PlusOutlined/> New Course</Button>
             </div>
             {
                 <Table 
@@ -118,6 +128,7 @@ const CourseScreen = () => {
                     dataSource={list}
                 />
             }
+            </Spin>
         </div>
     )
 }

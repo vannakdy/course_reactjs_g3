@@ -1,22 +1,57 @@
-import React  from "react";
+import React , {useState}  from "react";
 import {
     Form,
     Input,
     Select,
     Button,
-    Space
+    Space,
+    Spin
 } from "antd";
+import {useNavigate} from "react-router-dom";
+import axios from "axios"
 
 const {TextArea} = Input
 const {Option} = Select
 
 
 const CourseFormScreen = () => {
-    const layout = {
+
+    const navigate = useNavigate();
+    const [loading,setLoading] = useState(false)
+
+    const token = localStorage.getItem("accessToken")
+
+    const haveSave = () => {
         
     }
+
+    const handleCancel = () => {
+        navigate("/course")
+    }   
+
+    const hadleOnFinish = (objValue) => {
+        setLoading(true)
+        axios({
+            method : "POST",
+            url : "https://nitc.cleverapps.io/api/courses",
+            data  : {
+                name : objValue.name,
+                price : objValue.price,
+                description : objValue.description,
+                status : objValue.status
+            },
+            headers : {
+                Authorization : `Bearer ${token}`
+            }
+        }).then(res=>{
+            setLoading(false)
+            navigate("/course")
+        })
+    }
+
     return (
         <div>
+            <Spin spinning={loading}>
             <h1>New Courses</h1>
             <Form
                 labelCol={{
@@ -25,6 +60,7 @@ const CourseFormScreen = () => {
                 wrapperCol={{
                     span: 18,
                 }}
+                onFinish={hadleOnFinish}
             >
                 <Form.Item
                     label="Course name"
@@ -63,12 +99,13 @@ const CourseFormScreen = () => {
                     }}
                 >
                     <Space>
-                        <Button type="primary">Save</Button>
+                        <Button type="primary" htmlType="submit" >Save</Button>
                         <Button style={{color:"green"}}>Save New</Button>
-                        <Button>Cancel</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
                     </Space>
                 </Form.Item>
             </Form>
+            </Spin>
         </div>
     )
 }
