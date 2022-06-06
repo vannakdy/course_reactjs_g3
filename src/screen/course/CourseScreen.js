@@ -55,8 +55,8 @@ const CourseScreen = () => {
         })
     }
 
-    const handeEdit = () => {
-        
+    const handeEdit = (object) => {
+        navigate("/course/create/"+object.course_id)
     }
 
     const columns = [
@@ -100,7 +100,7 @@ const CourseScreen = () => {
                     <div style={{textAlign:"right"}}>
                         <Space>
                             <Button onClick={()=>handleDelete(record)} size="small" danger><DeleteFilled /> Delete</Button>
-                            <Button onClick={handeEdit} size="small" type="primary"><EditFilled /> Edit</Button>
+                            <Button onClick={()=>handeEdit(record)} size="small" type="primary"><EditFilled /> Edit</Button>
                         </Space>
                     </div>
                 )

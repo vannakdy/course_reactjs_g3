@@ -29,7 +29,8 @@ const HomeScreen = () => {
     }
     return (
         <div style={{padding:20}}>
-            <input 
+            
+            {/* <input 
                 value={code}
                 placeholder='code'
                 onChange={(e)=>setCode(e.target.value)}
@@ -74,7 +75,7 @@ const HomeScreen = () => {
                         </div>
                     )
                 })
-            }
+            } */}
         </div>
     )
 }

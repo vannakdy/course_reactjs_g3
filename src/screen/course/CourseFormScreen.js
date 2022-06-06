@@ -1,28 +1,62 @@
-import React , {useState}  from "react";
+import React , {useState,useEffect}  from "react";
 import {
     Form,
     Input,
     Select,
     Button,
     Space,
-    Spin
+    Spin,
 } from "antd";
-import {useNavigate} from "react-router-dom";
+import {useNavigate,useParams} from "react-router-dom";
 import axios from "axios"
 
 const {TextArea} = Input
 const {Option} = Select
 
 
-const CourseFormScreen = () => {
 
+const CourseFormScreen = () => {
+    const param = useParams();
     const navigate = useNavigate();
     const [loading,setLoading] = useState(false)
 
+    const  [form] = Form.useForm();
+
     const token = localStorage.getItem("accessToken")
 
-    const haveSave = () => {
-        
+    useEffect(()=>{
+        if(param.id != undefined){
+            getCourseById()
+        }
+    },[])
+
+
+    const getCourseById = () => {
+        setLoading(true)
+        axios({
+            method : "GET",
+            url : "https://nitc.cleverapps.io/api/courses/"+param.id,
+            data  : {
+            },
+            headers : {
+                Authorization : `Bearer ${token}`
+            }
+        }).then(res=>{
+            console.log(res)
+            var data = res.data.data[0];
+            // course_id: 72
+            // description: "Des react native"
+            // name: "React native"
+            // price: 1000
+            // status: 0
+            form.setFieldsValue({
+                name : data.name,
+                price : data.price,
+                description : data.description,
+                status : data.status,
+            })
+            setLoading(false)
+        })
     }
 
     const handleCancel = () => {
@@ -31,14 +65,21 @@ const CourseFormScreen = () => {
 
     const hadleOnFinish = (objValue) => {
         setLoading(true)
+        var methode = "POST";
+        var course_id = null;
+        if(param.id != undefined){
+            methode = "PUT";
+            course_id = param.id
+        }
         axios({
-            method : "POST",
+            method : methode,
             url : "https://nitc.cleverapps.io/api/courses",
             data  : {
+                course_id : course_id,
                 name : objValue.name,
                 price : objValue.price,
                 description : objValue.description,
-                status : objValue.status
+                status : objValue.status+""
             },
             headers : {
                 Authorization : `Bearer ${token}`
@@ -52,8 +93,9 @@ const CourseFormScreen = () => {
     return (
         <div>
             <Spin spinning={loading}>
-            <h1>New Courses</h1>
+            <h1>{param.id == undefined ? "NEW" : "Update"} Courses</h1>
             <Form
+                form={form}
                 labelCol={{
                     span: 6,
                 }}
@@ -87,9 +129,9 @@ const CourseFormScreen = () => {
                     label="Statau"
                     name="status"
                 >
-                    <Select defaultValue={"1"}>
-                        <Option value="1">Enabled</Option>
-                        <Option value="0">Disabled</Option>
+                    <Select defaultValue={1}>
+                        <Option value={1}>Enabled</Option>
+                        <Option value={0}>Disabled</Option>
                     </Select>
                 </Form.Item>
                 <Form.Item
@@ -99,8 +141,8 @@ const CourseFormScreen = () => {
                     }}
                 >
                     <Space>
-                        <Button type="primary" htmlType="submit" >Save</Button>
-                        <Button style={{color:"green"}}>Save New</Button>
+                        <Button type="primary" htmlType="submit" >{param.id == undefined ? "Save" : "Update"}</Button>
+                        {/* <Button style={{color:"green"}}>Save New</Button> */}
                         <Button onClick={handleCancel}>Cancel</Button>
                     </Space>
                 </Form.Item>

@@ -52,9 +52,11 @@ const App = () => {
       {is_login == "true" ?
        <div className="menu_main">
          <div>
+          <Link className="menu_item" to="/">Home</Link>
           <Link className="menu_item" to="/course">Course</Link>
-          <Link className="menu_item" to="/student">Student</Link>
           <Link className="menu_item" to="/teacher">Teacher</Link>
+          <Link className="menu_item" to="/student">Classroom</Link>
+          <Link className="menu_item" to="/student">Student</Link>
          </div>
          <div>
           <Dropdown overlay={menu}>
@@ -76,6 +78,7 @@ const App = () => {
           <Route path="/teacher" element={<TeacherScreen/>}/>
           <Route path="/course" element={<CourseScreen/>}/>
           <Route path="/course/create" element={<CourseFormScreen/>}/>
+          <Route path="/course/create/:id" element={<CourseFormScreen/>}/>
           
           <Route path="/login" element={<LoginScreen/>}/>
           <Route path="*" element={<h1>Route Not Found</h1>}/>
