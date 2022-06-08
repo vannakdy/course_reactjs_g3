@@ -8,7 +8,7 @@ import {
     Spin,
 } from "antd";
 import {useNavigate,useParams} from "react-router-dom";
-import axios from "axios"
+import {fetchData} from "../../helpler"
 
 const {TextArea} = Input
 const {Option} = Select
@@ -22,8 +22,6 @@ const CourseFormScreen = () => {
 
     const  [form] = Form.useForm();
 
-    const token = localStorage.getItem("accessToken")
-
     useEffect(()=>{
         if(param.id != undefined){
             getCourseById()
@@ -33,22 +31,8 @@ const CourseFormScreen = () => {
 
     const getCourseById = () => {
         setLoading(true)
-        axios({
-            method : "GET",
-            url : "https://nitc.cleverapps.io/api/courses/"+param.id,
-            data  : {
-            },
-            headers : {
-                Authorization : `Bearer ${token}`
-            }
-        }).then(res=>{
-            console.log(res)
-            var data = res.data.data[0];
-            // course_id: 72
-            // description: "Des react native"
-            // name: "React native"
-            // price: 1000
-            // status: 0
+        fetchData("api/courses/"+param.id,{},"GET").then(res=>{
+            var data = res.data[0]
             form.setFieldsValue({
                 name : data.name,
                 price : data.price,
@@ -57,6 +41,25 @@ const CourseFormScreen = () => {
             })
             setLoading(false)
         })
+        // axios({
+        //     method : "GET",
+        //     url : "https://nitc.cleverapps.io/api/courses/"+param.id,
+        //     data  : {
+        //     },
+        //     headers : {
+        //         Authorization : `Bearer ${token}`
+        //     }
+        // }).then(res=>{
+        //     console.log(res)
+        //     var data = res.data.data[0]
+        //     form.setFieldsValue({
+        //         name : data.name,
+        //         price : data.price,
+        //         description : data.description,
+        //         status : data.status,
+        //     })
+        //     setLoading(false)
+        // })
     }
 
     const handleCancel = () => {
@@ -71,23 +74,33 @@ const CourseFormScreen = () => {
             methode = "PUT";
             course_id = param.id
         }
-        axios({
-            method : methode,
-            url : "https://nitc.cleverapps.io/api/courses",
-            data  : {
-                course_id : course_id,
-                name : objValue.name,
-                price : objValue.price,
-                description : objValue.description,
-                status : objValue.status+""
-            },
-            headers : {
-                Authorization : `Bearer ${token}`
-            }
-        }).then(res=>{
+        var paramData = {
+            course_id : course_id,
+            name : objValue.name,
+            price : objValue.price,
+            description : objValue.description,
+            status : objValue.status+""
+        }
+        fetchData("api/courses",paramData,methode).then(res=>{
             setLoading(false)
             navigate("/course")
         })
+        // axios({
+        //     method : methode,
+        //     url : "https://nitc.cleverapps.io/api/courses",
+        //     data  : {
+        //         course_id : course_id,
+        //         name : objValue.name,
+        //         price : objValue.price,
+        //         description : objValue.description,
+        //         status : objValue.status+""
+        //     },
+        //     headers : {
+        //         Authorization : `Bearer ${token}`
+        //     }
+        // }).then(res=>{
+            
+        // })
     }
 
     return (

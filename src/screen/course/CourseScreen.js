@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import "./CourseScreen.css";
 import {useNavigate} from "react-router-dom";
+import { fetchData } from "../../helpler";
 
 const CourseScreen = () => {
 
@@ -25,34 +26,41 @@ const CourseScreen = () => {
 
     const getListCourse = () => {
         setLoading(true)
-        axios({
-            method : "GET",
-            url : "https://nitc.cleverapps.io/api/courses",
-            data : {},
-            headers : {
-                // Authorization : `Bearer ${token}`
-                Authorization : "Bearer "+token
-            }
-        }).then(response=>{
+        fetchData("api/courses",{},"GET").then(res=>{
             setLoading(false)
-            var res = response.data;
-            console.log(res.data)
             setList(res.data)
         })
+        // axios({
+        //     method : "GET",
+        //     url : "https://nitc.cleverapps.io/api/courses",
+        //     data : {},
+        //     headers : {
+        //         Authorization : "Bearer "+token
+        //     }
+        // }).then(response=>{
+        //     setLoading(false)
+        //     var res = response.data;
+        //     console.log(res.data)
+        //     setList(res.data)
+        // })
     }
 
     const handleDelete = (record) => {
-        axios({
-            method : "DELETE",
-            url : "https://nitc.cleverapps.io/api/courses/"+record.course_id,
-            data : {},
-            headers : {
-                Authorization : `Bearer ${token}`
-            }
-        }).then(response=>{
+        fetchData("api/courses/"+record.course_id,{},"DELETE").then(res=>{
             message.success("Delete successfully!");
             getListCourse();
         })
+        // axios({
+        //     method : "DELETE",
+        //     url : "https://nitc.cleverapps.io/api/courses/"+record.course_id,
+        //     data : {},
+        //     headers : {
+        //         Authorization : `Bearer ${token}`
+        //     }
+        // }).then(response=>{
+        //     message.success("Delete successfully!");
+        //     getListCourse();
+        // })
     }
 
     const handeEdit = (object) => {
