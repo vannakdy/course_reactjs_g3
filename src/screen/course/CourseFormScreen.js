@@ -120,6 +120,12 @@ const CourseFormScreen = () => {
                 <Form.Item
                     label="Course name"
                     name="name"
+                    rules={[
+                        {
+                            required : true,
+                            message : "Please fill in course name!"
+                        }
+                    ]}
                 >
                     <Input placeholder="Course name" />
                 </Form.Item>

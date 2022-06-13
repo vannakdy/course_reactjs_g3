@@ -2,12 +2,13 @@
 
 import React,{useEffect,useState} from "react";
 import {fetchData} from "../../helpler";
-import {Button, Form, Input, Modal, Row, Space, Spin,Table} from "antd"
+import {Button, Form, Input, Modal, Row, Select, Space, Spin,Table} from "antd";
 const TeacherScreen = () => {
     const [list , setList] = useState([]);
     const [loading,setLoading] = useState(false);
     const [visible,setVisible] = useState(false);
-
+    const {Option} = Select;
+    const {TextArea} = Input
     useEffect(()=>{
         getListTeacher()
     },[])
@@ -89,26 +90,125 @@ const TeacherScreen = () => {
         // ...
     }
 
+    const handleSave = () => {
+
+    }
+
+    const handleFinish = (objectForm) => {
+        debugger
+        var params = {
+            fname : objectForm.fname,
+            lastname : objectForm.lastname,
+            gender : Number(objectForm.gender),
+            tel : objectForm.phone,
+            email : objectForm.email,
+            description : objectForm.description,
+        }
+        setLoading(true);
+        fetchData("api/teacher",params,"POST").then(res=>{
+            setLoading(false);
+            console.log(res);
+            handleCloseModal();
+        })
+    }
+
 
     return (
         <div>
             <Modal
+                title="New Teacher"
                 visible={visible}
                 onCancel={handleCloseModal}
-                onOk={onOkModal}
+                // onOk={onOkModal}
+                footer={null}
+                // footer={[
+                //     <Button onClick={handleCloseModal}>
+                //         Cancel
+                //     </Button>,
+                //     <Button htmlType="submit" onClick={handleSave}>
+                //         Save
+                //     </Button>
+                // ]}
             >
-                <Form>
+                <Form
+                    labelCol={{
+                        span : 6
+                    }}
+                    wrapperCol={{
+                        span : 18
+                    }}
+                    onFinish={handleFinish}
+                >
                     <Form.Item
                         label="First name"
                         name={"fname"}
+                        rules={[
+                            {
+                                required : true,
+                                message : "First name required!"
+                            }
+                        ]}
                     >
                         <Input/>
                     </Form.Item>
                     <Form.Item
-                        label="First name"
-                        name={"fname"}
+                        label="Last name"
+                        name={"lastname"}
+                        rules={[
+                            {
+                                required : true,
+                                message : "Last name required!"
+                            }
+                        ]}
                     >
                         <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Gender"
+                        name={"gender"}
+                    >
+                        <Select defaultValue={"1"}>
+                            <Option value={"1"}>Male</Option>
+                            <Option value={"0"}>Female</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        label="Email"
+                        name={"email"}
+                    >
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Phone"
+                        name={"phone"}
+                    >
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Description"
+                        name={"description"}
+                    >
+                        <TextArea/>
+                    </Form.Item>
+                    <Form.Item
+                        // style={{textAlign:"right"}}
+                        label=""
+                        name="button"
+                        labelCol={{
+                            span:6
+                        }}
+                        wrapperCol={{
+                            span:18
+                        }}
+                    >
+                        <Space>
+                            <Button onClick={handleCloseModal}>
+                                Cancel
+                            </Button>
+                            <Button htmlType="submit">
+                                Save
+                            </Button>
+                        </Space>
                     </Form.Item>
                 </Form>
             </Modal>
