@@ -16,5 +16,7 @@ export const fetchData = (paramUrl="",data={},method="GET") => {
         }
     }).then(response=>{
         return response.data;
+    }).catch(err=>{
+        window.location.href = "/login"
     })
 }

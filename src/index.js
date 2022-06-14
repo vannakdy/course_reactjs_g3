@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import 'antd/dist/antd.css';
+// import 'antd/dist/antd.less';
 // import "@ant - design/flowchart/dist/index.css";
 import App from './App';
 

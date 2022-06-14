@@ -2,13 +2,17 @@
 
 import React,{useEffect,useState} from "react";
 import {fetchData} from "../../helpler";
-import {Button, Form, Input, Modal, Row, Select, Space, Spin,Table} from "antd";
+import "./TeacherScreen.css";
+import {Button, Divider, Form, Input, message, Modal, Row, Select, Space, Spin,Table} from "antd";
 const TeacherScreen = () => {
     const [list , setList] = useState([]);
     const [loading,setLoading] = useState(false);
     const [visible,setVisible] = useState(false);
+    const [id,setId] = useState(null)
     const {Option} = Select;
-    const {TextArea} = Input
+    const {TextArea} = Input;
+    const [formRef] = Form.useForm();
+
     useEffect(()=>{
         getListTeacher()
     },[])
@@ -70,8 +74,8 @@ const TeacherScreen = () => {
             render : (item,items) => {
                 return (
                     <Space>
-                        <Button style={{color:"red"}} size="small">DELETE</Button>
-                        <Button size="small">EDIT</Button>
+                        <Button onClick={()=>handleDelete(items)} style={{color:"red"}} size="small">DELETE</Button>
+                        <Button onClick={()=>handleShowEdit(items)} size="small">EDIT</Button>
                     </Space>
                 )
             }
@@ -84,34 +88,73 @@ const TeacherScreen = () => {
 
     const handleCloseModal = () => {
         setVisible(false)
+        formRef.resetFields();
+        setId(null)
     }
 
     const onOkModal = () => {
         // ...
     }
 
-    const handleSave = () => {
-
-    }
-
-    const handleFinish = (objectForm) => {
-        debugger
-        var params = {
-            fname : objectForm.fname,
-            lastname : objectForm.lastname,
-            gender : Number(objectForm.gender),
-            tel : objectForm.phone,
-            email : objectForm.email,
-            description : objectForm.description,
-        }
+    const handleDelete = (items) => {
         setLoading(true);
-        fetchData("api/teacher",params,"POST").then(res=>{
+        fetchData("api/teacher/"+items.teacher_id,{},"DELETE").then(res=>{
             setLoading(false);
-            console.log(res);
-            handleCloseModal();
+            message("Delete success!");
+            getListTeacher();
         })
     }
 
+    const handleShowEdit = (items) => {
+        setVisible(true)
+        setId(items.teacher_id)
+        formRef.setFieldsValue({
+            fname : items.fname,
+            lastname : items.lastname,
+            gender : items.gender+"",
+            email : items.email,
+            phone : items.tel,
+            description : items.description,
+        })
+    }
+
+    const handleFinish = (objectForm) => {
+        if(id == null){
+            var params = {
+                fname : objectForm.fname,
+                lastname : objectForm.lastname,
+                gender : Number(objectForm.gender),
+                tel : objectForm.phone,
+                email : objectForm.email,
+                description : objectForm.description,
+            }
+            setLoading(true);
+            fetchData("api/teacher",params,"POST").then(res=>{
+                setLoading(false);
+                console.log(res);
+                handleCloseModal();
+                getListTeacher();
+            })
+        }else{
+            var params = {
+                teacher_id : id,
+                fname : objectForm.fname,
+                lastname : objectForm.lastname,
+                gender : Number(objectForm.gender),
+                tel : objectForm.phone,
+                email : objectForm.email,
+                description : objectForm.description,
+            }
+            setLoading(true);
+            fetchData("api/teacher",params,"PUT").then(res=>{
+                setLoading(false);
+                console.log(res);
+                handleCloseModal();
+                getListTeacher();
+            })
+        }
+       
+    }
 
     return (
         <div>
@@ -131,6 +174,7 @@ const TeacherScreen = () => {
                 // ]}
             >
                 <Form
+                    form = {formRef}
                     labelCol={{
                         span : 6
                     }}
@@ -175,12 +219,23 @@ const TeacherScreen = () => {
                     <Form.Item
                         label="Email"
                         name={"email"}
+                        rules={[
+                            { 
+                                type: 'email',
+                                message : "Email invalid!"
+                            },
+                            {
+                                required : true,
+                                message : "Email required!"
+                            }
+                        ]}
                     >
                         <Input/>
                     </Form.Item>
                     <Form.Item
                         label="Phone"
                         name={"phone"}
+
                     >
                         <Input/>
                     </Form.Item>
@@ -191,22 +246,20 @@ const TeacherScreen = () => {
                         <TextArea/>
                     </Form.Item>
                     <Form.Item
-                        // style={{textAlign:"right"}}
                         label=""
                         name="button"
-                        labelCol={{
-                            span:6
-                        }}
                         wrapperCol={{
-                            span:18
+                            span:18,
+                            offset:6
                         }}
+                        style={{textAlign:"right"}}
                     >
                         <Space>
                             <Button onClick={handleCloseModal}>
                                 Cancel
                             </Button>
                             <Button htmlType="submit">
-                                Save
+                                {id == null ? "SAVE" : "UPDATE"}
                             </Button>
                         </Space>
                     </Form.Item>
@@ -215,12 +268,10 @@ const TeacherScreen = () => {
             
             <Spin spinning={loading}>
                 
-                <Row>
-                    <Space>
-                        <h1>TeacherScreen</h1>
-                        <Button onClick={handlePopUp} type="primary">Add New</Button>
-                    </Space>
-                </Row>
+                <div className="content_header">
+                    <h1>TeacherScreen</h1>
+                    <Button onClick={handlePopUp} type="primary">Add New</Button>
+                </div>
                 <Table 
                     bordered={true}
                     columns={columns}
