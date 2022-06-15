@@ -5,10 +5,13 @@
     margin-top: 100px;
 }
 .frm_login{
-    width: 400px;
-    background-color: bisque;
+
+    width: 500px;
+    /* background-color: bisque; */
+    background-image: linear-gradient(rgb(119, 101, 101), rgb(127, 128, 143));
     padding: 20px 20px;
     padding-bottom: 50px;
+    padding-top:50px;
 }
 
 .txt_login{
