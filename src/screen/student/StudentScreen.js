@@ -33,11 +33,13 @@ const StudentScreen = () => {
                         //     name="Dog"
                         //     description="Description don"
                         // />
-                        <AnimalCart 
-                            name={item.name}
-                            description={item.decs}
-                            image_url = {item.image_path}
-                        />
+                        // <AnimalCart 
+                        //     name={item.name}
+                        //     description={item.decs}
+                        //     image_url = {item.image_path}
+                        // />
+                        <div>
+                        </div>
                     )
                 })
             }

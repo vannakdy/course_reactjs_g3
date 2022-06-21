@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from '@ant-design/charts';
+// import { Line } from '@ant-design/charts';
 
 const HomeScreen = () => {
   const data = [
@@ -23,7 +23,7 @@ const HomeScreen = () => {
       shape: 'diamond',
     },
   };
-  return <Line {...config} />;
+  // return <Line {...config} />;
   return (
     <div></div>
   )
