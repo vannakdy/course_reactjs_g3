@@ -10,7 +10,7 @@ const TeacherScreen = () => {
     const [visible,setVisible] = useState(false);
     const [id,setId] = useState(null)
     const {Option} = Select;
-    const {TextArea} = Input;
+    const {TextArea,Search} = Input;
     const [formRef] = Form.useForm();
 
     useEffect(()=>{
@@ -40,6 +40,8 @@ const TeacherScreen = () => {
         {
             title: "First name",
             dataIndex: "fname",
+            sorter: (a, b) => a.fname.length - b.fname.length,
+            sortDirections: ['descend'],
         },
         {
             title: "Last name",
@@ -156,6 +158,17 @@ const TeacherScreen = () => {
        
     }
 
+    const onSearch = (text) => {
+        setLoading(true)
+        var params = {
+            search : text
+        }
+        fetchData("api/teacher/search",params,"POST").then(res=>{
+            setList(res.data)
+            setLoading(false)
+        })
+    }
+
     return (
         <div>
             <Modal
@@ -269,7 +282,19 @@ const TeacherScreen = () => {
             <Spin spinning={loading}>
                 
                 <div className="content_header">
-                    <h1>TeacherScreen</h1>
+                    <div>
+                        <Space>
+                            <h1>TeacherScreen</h1>
+                            <Search
+                                allowClear={true}
+                                placeholder="Search teacher"
+                                onSearch={onSearch}
+                                style={{
+                                    width: 200,
+                                }}
+                            />
+                        </Space>
+                    </div>
                     <Button onClick={handlePopUp} type="primary">Add New</Button>
                 </div>
                 <Table 
